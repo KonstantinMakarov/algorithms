@@ -23,6 +23,14 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         print(sortedArray, "Sorted array:");
     }
 
+    @Test
+    public void testInsertionSort() {
+        int[] array = IntInterval.oneTo(10).toReversed().toArray();
+        print(array, "Unsorted array:");
+        int[] sortedArray = InsertionSort.sort(array);
+        print(sortedArray, "Sorted array:");
+    }
+
     @Benchmark
     public int[] test100_bubbleSort() {
         return BubbleSort.sort(IntInterval.oneTo(100).toReversed().toArray());
