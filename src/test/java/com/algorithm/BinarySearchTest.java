@@ -1,62 +1,92 @@
 package com.algorithm;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-@State(Scope.Thread)
+@State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.SECONDS)
-public class BinarySearchTest extends AlgorithmsBaseTest {
+public class BinarySearchTest {
 
-    final private int wantedElement = 10;
-    final private int arrayLength = 100;
+    /**
+     * The binary search based on the search in the balanced binary tree
+     * <p>
+     * Algorithm complexity - O(logN)
+     */
+    public int binarySearch(int[] array, int wantedElement) {
 
-    @Test
-    public void binarySearchTest() {
-        // algorithm complexity - O(logN)
-        int[] array = generateArray(arrayLength);
-        Arrays.sort(array);
+        int midNumber = array.length / 2;
 
-        BinarySearch binarySearch = new BinarySearch();
-
-        if (binarySearch.findElement(array, wantedElement) != -1) {
-            System.out.println("Wanted element <" + wantedElement + "> has been found");
-        } else {
-            System.out.println("Wanted element <" + wantedElement + "> is absent");
+//        System.out.println(midNumber); //Uncomment to see the power of binary search
+        if (midNumber < 1) {
+            return -1;
         }
+        if (array[midNumber] == wantedElement) {
+            return array[midNumber];
+        } else if (array[midNumber] > wantedElement) {
+            return binarySearch(Arrays.copyOf(array, midNumber), wantedElement);
+
+        } else if (array[midNumber] < wantedElement) {
+            return binarySearch(Arrays.copyOfRange(array, midNumber, array.length), wantedElement);
+        }
+        throw new IllegalArgumentException();
 
     }
 
-    @Test
-    public void simpleSearchTest() {
-        // algorithm complexity - O(N)
-        int[] array = generateArray(arrayLength);
-        Arrays.sort(array);
+    /**
+     * Simple search needs to go through the whole array in bad case
+     * <p>
+     * Algorithm complexity - O(N)
+     */
+    public int simpleSearch(int[] array, int wantedElement) {
 
-        boolean wantedElementAbsent = true;
         for (int i = 0; i < array.length; i++) {
+//            System.out.println(i); //Uncomment to see the power of binary search
             if (array[i] == wantedElement) {
-                System.out.println("Wanted element <" + wantedElement + "> has been found");
-                wantedElementAbsent = false;
-                break;
+                return array[i];
             }
         }
-        if (wantedElementAbsent){
-            System.out.println("Wanted element <" + wantedElement + "> is absent");
-        }
+        return -1;
     }
 
+    @Benchmark
+    public int search100_simple() {
+        return simpleSearch(IntInterval.oneTo(100).toArray(), 100);
+    }
 
-    private int[] generateArray(int length) {
-        int[] array = new int[length];
-        for (int i = 0; i < length; i++) {
-            array[i] = RandomUtils.nextInt();
-        }
-        return array;
+    @Benchmark
+    public int search100_binary() {
+        return binarySearch(IntInterval.oneTo(100).toArray(), 100);
+    }
+
+    @Benchmark
+    public int searchMillion_simple() {
+        return simpleSearch(IntInterval.oneTo(1000000).toArray(), 1000000);
+    }
+
+    @Benchmark
+    public int searchMillion_binary() {
+        return binarySearch(IntInterval.oneTo(1000000).toArray(), 1000000);
+    }
+
+    @Test
+    public void binarySearchVsSimpleSearchDemo() throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(BinarySearchTest.class.getSimpleName())
+                .warmupIterations(5)
+                .measurementIterations(3)
+                .forks(1)
+                .build();
+
+        new Runner(opt).run();
     }
 
 }
