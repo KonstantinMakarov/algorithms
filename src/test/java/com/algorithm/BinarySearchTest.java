@@ -8,38 +8,12 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.SECONDS)
+@BenchmarkMode(Mode.SingleShotTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class BinarySearchTest {
-
-    /**
-     * The binary search based on the search in the balanced binary tree
-     * <p>
-     * Algorithm complexity - O(logN)
-     */
-    public int binarySearch(int[] array, int wantedElement) {
-
-        int midNumber = array.length / 2;
-
-//        System.out.println(midNumber); //Uncomment to see the power of binary search
-        if (midNumber < 1) {
-            return -1;
-        }
-        if (array[midNumber] == wantedElement) {
-            return array[midNumber];
-        } else if (array[midNumber] > wantedElement) {
-            return binarySearch(Arrays.copyOf(array, midNumber), wantedElement);
-
-        } else if (array[midNumber] < wantedElement) {
-            return binarySearch(Arrays.copyOfRange(array, midNumber, array.length), wantedElement);
-        }
-        throw new IllegalArgumentException();
-
-    }
 
     /**
      * Simple search needs to go through the whole array in bad case
@@ -47,42 +21,102 @@ public class BinarySearchTest {
      * Algorithm complexity - O(N)
      */
     public int simpleSearch(int[] array, int wantedElement) {
-
         for (int i = 0; i < array.length; i++) {
-//            System.out.println(i); //Uncomment to see the power of binary search
             if (array[i] == wantedElement) {
-                return array[i];
+                System.out.println("Element found at index " + i);
+                return i;
             }
         }
+        System.out.println("Element not present");
         return -1;
     }
 
-    @Benchmark
-    public int search100_simple() {
-        return simpleSearch(IntInterval.oneTo(100).toArray(), 100);
+    public void searchBinaryRecursive(int[] array, int wantedElement){
+        int rightIndex = array.length - 1;
+        int result = BinarySearch.binaryRecursiveSearch(array, 0, rightIndex, wantedElement);
+        if (result == -1)
+            System.out.println("Element not present");
+        else
+            System.out.println("Element found at index " + result);
+    }
+
+    public void searchBinaryWhile(int[] array, int wantedElement){
+        int rightIndex = array.length - 1;
+        int result = BinarySearch.binarySearchWhile(array, 0, rightIndex, wantedElement);
+        if (result == -1)
+            System.out.println("Element not present");
+        else
+            System.out.println("Element found at index " + result);
     }
 
     @Benchmark
-    public int search100_binary() {
-        return binarySearch(IntInterval.oneTo(100).toArray(), 100);
+    public void search100_simple() {
+        simpleSearch(IntInterval.oneTo(100).toArray(), 100);
     }
 
     @Benchmark
-    public int searchMillion_simple() {
-        return simpleSearch(IntInterval.oneTo(1000000).toArray(), 1000000);
+    public void search100_binaryRecursive() {
+        searchBinaryRecursive(IntInterval.oneTo(100).toArray(), 100);
     }
 
     @Benchmark
-    public int searchMillion_binary() {
-        return binarySearch(IntInterval.oneTo(1000000).toArray(), 1000000);
+    public void search100_binaryWhile() {
+        searchBinaryWhile(IntInterval.oneTo(100).toArray(), 100);
+    }
+
+    @Benchmark
+    public void searchMillion_simple() {
+        simpleSearch(IntInterval.oneTo(1000000).toArray(), 1000000);
+    }
+
+    @Benchmark
+    public void searchMillion_binaryRecursive() {
+        searchBinaryRecursive(IntInterval.oneTo(1000000).toArray(),1000000);
+    }
+
+    @Benchmark
+    public void searchMillion_binaryWhile() {
+        searchBinaryWhile(IntInterval.oneTo(1000000).toArray(), 1000000);
+    }
+
+    @Benchmark
+    public void search100Million_simple() {
+        simpleSearch(IntInterval.oneTo(100000000).toArray(), 100000000);
+    }
+
+    @Benchmark
+    public void search100Million_binaryRecursive() {
+        searchBinaryRecursive(IntInterval.oneTo(100000000).toArray(),100000000);
+    }
+
+    @Benchmark
+    public void search100Million_binaryWhile() {
+        searchBinaryWhile(IntInterval.oneTo(100000000).toArray(), 100000000);
     }
 
     @Test
-    public void binarySearchVsSimpleSearchDemo() throws RunnerException {
+    public void binarySearchVsSimpleSearchDemo_performanceAnalysis() {
+        int[] array = IntInterval.oneTo(100000000).toArray();
+        for (int i=0; i<10; i++) {
+            System.out.println(i);
+            long start = System.nanoTime();
+            searchBinaryRecursive(array, 100000000);
+            System.out.println("Binary Recursive: " + (System.nanoTime() - start)/10000);
+            start = System.nanoTime();
+            simpleSearch(array, 100000000);
+            System.out.println("Simple " + (System.nanoTime() - start)/10000);
+            start = System.nanoTime();
+            searchBinaryWhile(array, 100000000);
+            System.out.println("Binary While " + (System.nanoTime() - start)/10000);
+        }
+    }
+
+    @Test
+    public void binarySearchVsSimpleSearchDemo_jmh() throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BinarySearchTest.class.getSimpleName())
-                .warmupIterations(5)
-                .measurementIterations(3)
+                .warmupIterations(10)
+                .measurementIterations(50)
                 .forks(1)
                 .build();
 
