@@ -1,6 +1,6 @@
 package com.algorithm;
 
-public class BubbleSort {
+public class SelectionSort {
 
     /**
      * Bubble sorting repeatedly steps through the list, compares elements and swaps them if they are in the wrong order.
