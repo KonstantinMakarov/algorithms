@@ -3,7 +3,8 @@ package com.algorithm;
 public class BinarySearch {
 
     /**
-     * The binary search based on the search in the balanced binary tree
+     * The binary search based on the search in the balanced binary tree.
+     * Source array should be sorted by default.
      * <p>
      * Algorithm complexity - O(logN)
      */

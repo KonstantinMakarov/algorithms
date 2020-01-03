@@ -38,15 +38,25 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
 
     @Benchmark
     public int[] test50000_bubbleSort() {
-        return BubbleSort.sort(IntInterval.oneTo(50000).toReversed().toArray());
+        return BubbleSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test100_insertionSort() {
+        return InsertionSort.sort(IntInterval.oneTo(100).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test50000_insertionSort() {
+        return InsertionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
     @Test
     public void sortingAlgorithmsComparingDemo() throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(SortAlgorithmTest.class.getSimpleName())
-                .warmupIterations(5)
-                .measurementIterations(3)
+                .warmupIterations(10)
+                .measurementIterations(30)
                 .forks(1)
                 .build();
 

@@ -2,17 +2,28 @@ package com.algorithm;
 
 public class InsertionSort {
 
+    /**
+     * Sorting algorithm that works the way we sort playing cards in our hands.
+     * <p>
+     * Algorithm complexity - O(N^2)
+     * <p>
+     * https://www.geeksforgeeks.org/insertion-sort/
+     *
+     * @param array int[]
+     * @return int[]
+     */
     public static int[] sort(int[] array) {
-        for (int i = 1; i < array.length; i++) {
-            int currentValue = array[i];
-            for (int j = i - 1; j >= 0; j--) {
-                if (currentValue < array[j]) {
-                    array[j + 1] = array[j];
+        for (int globalIndex = 1; globalIndex < array.length; globalIndex++) {
+            int globalIndexValue = array[globalIndex];
+            int localIndex;
+            for (localIndex = globalIndex - 1; localIndex >= 0; localIndex--) {
+                if (globalIndexValue < array[localIndex]) {
+                    array[localIndex + 1] = array[localIndex];
                 } else {
                     break;
                 }
             }
-            array[i + 1] = currentValue;
+            array[localIndex + 1] = globalIndexValue;
         }
         return array;
     }

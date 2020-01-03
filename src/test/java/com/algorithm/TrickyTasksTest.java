@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TrickyTasks {
+public class TrickyTasksTest {
 
     // Найти два числа в отсортированном массиве A, которые в сумме дают S
     @Test
