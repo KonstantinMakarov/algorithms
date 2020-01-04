@@ -31,13 +31,21 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         print(sortedArray, "Sorted array:");
     }
 
+    @Test
+    public void testSelectionSort() {
+        int[] array = IntInterval.oneTo(10).toReversed().toArray();
+        print(array, "Unsorted array:");
+        int[] sortedArray = SelectionSort.sort(array);
+        print(sortedArray, "Sorted array:");
+    }
+
     @Benchmark
     public int[] test100_bubbleSort() {
         return BubbleSort.sort(IntInterval.oneTo(100).toReversed().toArray());
     }
 
     @Benchmark
-    public int[] test50000_bubbleSort() {
+    public int[] test70000_bubbleSort() {
         return BubbleSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
@@ -47,8 +55,18 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
     }
 
     @Benchmark
-    public int[] test50000_insertionSort() {
+    public int[] test70000_insertionSort() {
         return InsertionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test100_selectionSort() {
+        return SelectionSort.sort(IntInterval.oneTo(100).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test70000_selectionSort() {
+        return SelectionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
     @Test
