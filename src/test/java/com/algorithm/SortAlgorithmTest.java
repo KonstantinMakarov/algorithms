@@ -39,6 +39,14 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         print(sortedArray, "Sorted array:");
     }
 
+    @Test
+    public void testCountingSort() {
+        int[] array = IntInterval.oneTo(10).toReversed().toArray();
+        print(array, "Unsorted array:");
+        int[] sortedArray = CountingSort.sort(array);
+        print(sortedArray, "Sorted array:");
+    }
+
     @Benchmark
     public int[] test100_bubbleSort() {
         return BubbleSort.sort(IntInterval.oneTo(100).toReversed().toArray());
@@ -69,12 +77,22 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         return SelectionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
+    @Benchmark
+    public int[] test100_countingSort() {
+        return SelectionSort.sort(IntInterval.oneTo(100).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test70000_countingSort() {
+        return SelectionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
+    }
+
     @Test
     public void sortingAlgorithmsComparingDemo() throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(SortAlgorithmTest.class.getSimpleName())
                 .warmupIterations(10)
-                .measurementIterations(30)
+                .measurementIterations(10)
                 .forks(1)
                 .build();
 
