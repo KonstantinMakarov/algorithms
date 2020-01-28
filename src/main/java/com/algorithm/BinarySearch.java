@@ -14,14 +14,12 @@ public class BinarySearch {
             int midIndexInLocalRange = localRange / 2;
             int midIndexInGlobalRange = leftIndex + midIndexInLocalRange;
 
-            // If element is bigger than mid, then it can only
-            // be present in right subarray
+            // If element is bigger than mid, then it can only be present in right subarray
             if (wantedElement > array[midIndexInGlobalRange]) {
                 return binaryRecursiveSearch(array, midIndexInGlobalRange + 1, rightIndex, wantedElement);
             }
 
-            // If element is smaller than mid, then it can only
-            // be present in left subarray
+            // If element is smaller than mid, then it can only be present in left subarray
             if (wantedElement < array[midIndexInGlobalRange]) {
                 return binaryRecursiveSearch(array, leftIndex, midIndexInGlobalRange - 1, wantedElement);
             }

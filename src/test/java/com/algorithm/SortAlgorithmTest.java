@@ -8,7 +8,10 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -44,6 +47,14 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         int[] array = IntInterval.oneTo(10).toReversed().toArray();
         print(array, "Unsorted array:");
         int[] sortedArray = CountingSort.sort(array);
+        print(sortedArray, "Sorted array:");
+    }
+
+    @Test
+    public void testMergeSort() {
+        int[] array = IntInterval.oneTo(10).toReversed().toArray();
+        print(array, "Unsorted array:");
+        int[] sortedArray = MergeSort.sort(array);
         print(sortedArray, "Sorted array:");
     }
 
