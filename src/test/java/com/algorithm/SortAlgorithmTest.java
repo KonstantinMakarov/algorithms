@@ -98,6 +98,16 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         return SelectionSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
+    @Benchmark
+    public int[] test100_mergeSort() {
+        return MergeSort.sort(IntInterval.oneTo(100).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test70000_mergeSort() {
+        return MergeSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
+    }
+
     @Test
     public void sortingAlgorithmsComparingDemo() throws RunnerException {
         Options opt = new OptionsBuilder()
