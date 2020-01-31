@@ -1,5 +1,6 @@
 package com.algorithm;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -8,10 +9,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -55,6 +53,14 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         int[] array = IntInterval.oneTo(10).toReversed().toArray();
         print(array, "Unsorted array:");
         int[] sortedArray = MergeSort.sort(array);
+        print(sortedArray, "Sorted array:");
+    }
+
+    @Test
+    public void testQuickSort() {
+        int[] array = IntInterval.oneTo(10).toReversed().toArray();
+        print(array, "Unsorted array:");
+        int[] sortedArray = QuickSort.sort(array);
         print(sortedArray, "Sorted array:");
     }
 
@@ -108,8 +114,25 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
         return MergeSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
+    @Benchmark
+    public int[] test100_quickSort() {
+        return QuickSort.sort(IntInterval.oneTo(100).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test70000_quickSort() {
+        return QuickSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
+    }
+
+    @Benchmark
+    public int[] test70000_quickSort_optimized() {
+        int[] array = IntInterval.oneTo(70000).toReversed().toArray();
+        ArrayUtils.shuffle(array);
+        return QuickSort.sort(array);
+    }
+
     @Test
-    public void sortingAlgorithmsComparingDemo() throws RunnerException {
+    public void sortAlgorithmsPerformanceComparingDemo() throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(SortAlgorithmTest.class.getSimpleName())
                 .warmupIterations(10)
