@@ -1,5 +1,6 @@
 package com.algorithm;
 
+import com.algorithm.sort.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.openjdk.jmh.annotations.*;
@@ -120,12 +121,12 @@ public class SortAlgorithmTest extends AlgorithmsBaseTest {
     }
 
     @Benchmark
-    public int[] test70000_quickSort() {
+    public int[] test70000_quickSort_badCase() {
         return QuickSort.sort(IntInterval.oneTo(70000).toReversed().toArray());
     }
 
     @Benchmark
-    public int[] test70000_quickSort_optimized() {
+    public int[] test70000_quickSort_goodCase() {
         int[] array = IntInterval.oneTo(70000).toReversed().toArray();
         ArrayUtils.shuffle(array);
         return QuickSort.sort(array);
